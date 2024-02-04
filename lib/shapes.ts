@@ -96,26 +96,29 @@ export const handleImageUpload = ({
   shapeRef,
   syncShapeInStorage,
 }: ImageUpload) => {
-  const reader = new FileReader();
+  const dd = canvas.current;
+  if (dd !== null) {
+    const reader = new FileReader();
 
-  reader.onload = () => {
-    fabric.Image.fromURL(reader.result as string, (img) => {
-      img.scaleToWidth(200);
-      img.scaleToHeight(200);
+    reader.onload = () => {
+      fabric.Image.fromURL(reader.result as string, (img) => {
+        img.scaleToWidth(200);
+        img.scaleToHeight(200);
 
-      canvas.current.add(img);
+        dd.add(img);
 
-      // @ts-ignore
-      img.objectId = uuidv4();
+        // @ts-ignore
+        img.objectId = uuidv4();
 
-      shapeRef.current = img;
+        shapeRef.current = img;
 
-      syncShapeInStorage(img);
-      canvas.current.requestRenderAll();
-    });
-  };
+        syncShapeInStorage(img);
+        dd.requestRenderAll();
+      });
+    };
 
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
+  }
 };
 
 export const createShape = (

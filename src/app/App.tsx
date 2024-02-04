@@ -57,7 +57,8 @@ export default function Page() {
   const deleteAllShape = useMutation(({ storage }) => {
     const canvasObjects = storage.get("canvasObjects");
     if (!canvasObjects || canvasObjects.size === 0) return true;
-    for (const [key, value] of canvasObjects.entries()) {
+    const keys = Array.from(canvasObjects.keys());
+    for (const key of keys) {
       canvasObjects.delete(key);
     }
     return canvasObjects.size === 0;
@@ -181,12 +182,14 @@ export default function Page() {
       <Navbar
         handleImageUpload={(e) => {
           e.stopPropagation();
-          handleImageUpload({
-            file: e.target.files![0],
-            canvas: fabricRef,
-            shapeRef,
-            syncShapeInStorage,
-          });
+          if (fabricRef.current !== null) {
+            handleImageUpload({
+              file: e.target.files![0],
+              canvas: fabricRef,
+              shapeRef,
+              syncShapeInStorage,
+            });
+          }
         }}
         imageInputRef={imageInputRef}
         activeElement={activeElement}
